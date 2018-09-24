@@ -35,3 +35,4 @@ export class LoginRedirectComponent implements OnInit {
             }
         }
     }
+}
