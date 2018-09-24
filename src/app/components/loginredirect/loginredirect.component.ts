@@ -15,18 +15,23 @@ export class LoginRedirectComponent implements OnInit {
         const tenant = localStorage.getItem('tenant');
         const clientId = localStorage.getItem('clientId');
 
-        this.adalService.init({
-            tenant: tenant,
-            clientId: clientId,
-            redirectUri: window.location.origin + '/loginredirect'
-        });
+        const canAuthenticate = tenant && clientId;
 
-        this.adalService.handleWindowCallback();
-
-        if (this.adalService.userInfo.authenticated) {
+        if (!canAuthenticate) {
             this.router.navigate(['/']);
         } else {
-            this.router.navigate(['/error']);
+            this.adalService.init({
+                tenant: tenant,
+                clientId: clientId,
+                redirectUri: window.location.origin + '/loginredirect'
+            });
+
+            this.adalService.handleWindowCallback();
+
+            if (this.adalService.userInfo.authenticated) {
+                this.router.navigate(['/']);
+            } else {
+                this.router.navigate(['/error']);
+            }
         }
     }
-}
